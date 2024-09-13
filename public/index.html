@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ACONEWS - Stay updated with the latest news around the world.">
+    <title>ACONEWS - Latest News</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .search-section {
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+            padding: 60px 0;
+            color: #fff;
+        }
+
+        .search-form .form-control {
+            border-radius: 20px;
+            padding: 10px 20px;
+        }
+
+        .search-form .btn {
+            background-color: #fff;
+            color: #007bff;
+            border-radius: 20px;
+            padding: 10px 30px;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            padding: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">ACONEWS</a>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <section class="search-section text-center">
+        <div class="container">
+            <h1 class="display-4">Stay Updated with ACONEWS</h1>
+            <p class="lead">Get the latest news, anytime, anywhere.</p>
+
+            <!-- Search Form -->
+            <form id="searchForm" class="search-form my-4 d-flex justify-content-center">
+                <input type="text" id="query" class="form-control w-50" placeholder="Search for news...">
+                <button type="submit" class="btn btn-primary ms-3">Search</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="container my-5">
+        <h2 class="text-center mb-5">Latest News</h2>
+
+        <!-- News Articles Grid -->
+        <div id="newsContainer" class="row"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <p>&copy; 2024 ACONEWS. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript for fetching news -->
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+            getNews(query);
+        });
+
+        function getNews(query = '') {
+            const apiKey = 'f6fd010eb84382c3f5224907c2345810';
+            const apiUrl = `https://gnews.io/api/v4/search?q=${query}&token=${"b66b786983c66f2f2dff3499a28b0d0a"}&lang=en&max=9`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let newsHTML = '';
+                    data.articles.forEach(article => {
+                        newsHTML += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card shadow-sm">
+                                    ${article.image ? `<img src="${article.image}" class="card-img-top" alt="${article.title}">` : ''}
+                                    <div class="card-body">
+                                        <h5 class="card-title">${article.title}</h5>
+                                        <p class="card-text">${article.description}</p>
+                                        <a href="${article.url}" class="btn btn-primary" target="_blank">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('newsContainer').innerHTML = newsHTML;
+                })
+                .catch(error => console.error('Error fetching the news:', error));
+        }
+
+        // Fetch the latest news on page load
+        getNews();
+    </script>
+</body>
+
+</html>
